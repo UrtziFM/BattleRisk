@@ -33,32 +33,73 @@ Click 'End Turn' to continue the game and pass control to the AI
 /* Data */
 
 var continents = [{
-    areas: ["indonesia", "new_guinea", "eastern_australia", "western_australia"],
-    name: "oceania",
-    bonus: 2
+    areas: ["Indonesia", "New Guinea", "Eastern Australia", "Western Australia"],
+    name: "Oceania",
+    bonus: 4
 }, {
-    areas: ["brazil", "peru", "colombia", "argentina"],
+    areas: ["Brazil", "Peru", "Colombia", "Argentina"],
     name: "South America",
-    bonus: 2
+    bonus: 6
 }, {
-    areas: ["egypt", "north_africa", "east_africa", "congo", "south_africa", "madagascar"],
-    name: "africa",
+    areas: ["Egypt", "North Africa", "East Africa", "Congo", "South Africa", "Madagascar"],
+    name: "Africa",
     bonus: 3
 }, {
-    areas: ["iceland", "uk", "scandinavia", "northern_europe", "spain", "ukraine", "southern_europe"],
-    name: "europe",
-    bonus: 5
+    areas: ["Iceland", "United Kingdom", "Scandinavia", "Northern Europe", "Spain", "Ukraine", "Southern Europe"],
+    name: "Europe",
+    bonus: 8
 }, {
-    areas: ["mexico", "eastern_us", "western_us", "quebec", "ontario", "alberta", "northwest_territory", "alaska", "greenland"],
+    areas: ["Mexico", "Eastern USA", "Western USA", "Quebec", "Ontario", "Alberta", "Northwest Territory", "Alaska", "Greenland"],
     name: "North America",
-    bonus: 5
+    bonus: 10
 }, {
-    areas: ["middle_east", "afghanistan", "ural", "siberia", "irkutsk", "yakutsk", "kamchatka", "mongolia", "japan", "china", "siam", "india"],
-    name: "asia",
+    areas: ["Middle East", "Afghanistan", "Ural", "Siberia", "Irkutsk", "Yakutsk", "Kamchatka", "Mongolia", "Japan", "China", "Siam", "India"],
+    name: "Asia",
     bonus: 7
 }];
 
-var countries = [{ name: "indonesia", continent: "oceania", owner: "none", color: "white", "army": 0, neighbours: ["siam", "western_australia", "new_guinea"] }, { name: "new_guinea", continent: "oceania", owner: "none", color: "white", "army": 0, neighbours: ["indonesia", "eastern_australia", "western_australia"] }, { name: "eastern_australia", continent: "oceania", owner: "none", color: "white", "army": 0, neighbours: ["western_australia", "new_guinea"] }, { name: "western_australia", continent: "oceania", owner: "none", color: "white", "army": 0, neighbours: ["eastern_australia", "new_guinea", "indonesia"] }, { name: "ural", continent: "asia", owner: "none", color: "white", "army": 0, neighbours: ["ukraine", "siberia", "afghanistan", "china"] }, { name: "siberia", continent: "asia", owner: "none", color: "white", "army": 0, neighbours: ["ural", "mongolia", "yakutsk", "irkutsk", "china"] }, { name: "afghanistan", continent: "asia", owner: "none", color: "white", "army": 0, neighbours: ["ukraine", "ural", "middle_east", "china", "india"] }, { name: "irkutsk", continent: "asia", owner: "none", color: "white", "army": 0, neighbours: ["yakutsk", "siberia", "kamchatka", "mongolia"] }, { name: "yakutsk", continent: "asia", owner: "none", color: "white", "army": 0, neighbours: ["irkutsk", "siberia", "kamchatka"] }, { name: "kamchatka", continent: "asia", owner: "none", color: "white", "army": 0, neighbours: ["alaska", "yakutsk", "japan", "irkutsk", "mongolia"] }, { name: "middle_east", continent: "asia", owner: "none", color: "white", "army": 0, neighbours: ["ukraine", "afghanistan", "india", "egypt", "east_africa", "southern_europe"] }, { name: "india", continent: "asia", owner: "none", color: "white", "army": 0, neighbours: ["middle_east", "siam", "afghanistan", "china"] }, { name: "siam", continent: "asia", owner: "none", color: "white", "army": 0, neighbours: ["indonesia", "india", "china"] }, { name: "china", continent: "asia", owner: "none", color: "white", "army": 0, neighbours: ["ural", "siberia", "afghanistan", "mongolia", "siam", "india"] }, { name: "mongolia", continent: "asia", owner: "none", color: "white", "army": 0, neighbours: ["irkutsk", "siberia", "kamchatka", "china", "japan"] }, { name: "japan", continent: "asia", owner: "none", color: "white", "army": 0, neighbours: ["kamchatka", "mongolia"] }, { name: "egypt", continent: "africa", owner: "none", color: "white", "army": 0, neighbours: ["middle_east", "southern_europe", "north_africa", "east_africa"] }, { name: "north_africa", continent: "africa", owner: "none", color: "white", "army": 0, neighbours: ["egypt", "southern_europe", "western_europe", "east_africa", "congo", "brazil"] }, { name: "east_africa", continent: "africa", owner: "none", color: "white", "army": 0, neighbours: ["middle_east", "egypt", "north_africa", "congo", "madagascar", "south_africa"] }, { name: "congo", continent: "africa", owner: "none", color: "white", "army": 0, neighbours: ["south_africa", "north_africa", "east_africa"] }, { name: "south_africa", continent: "africa", owner: "none", color: "white", "army": 0, neighbours: ["congo", "madagascar", "east_africa"] }, { name: "madagascar", continent: "africa", owner: "none", color: "white", "army": 0, neighbours: ["south_africa", "east_africa"] }, { name: "brazil", continent: "South America", owner: "none", color: "white", "army": 0, neighbours: ["peru", "argentina", "north_africa", "venezuela"] }, { name: "peru", continent: "South America", owner: "none", color: "white", "army": 0, neighbours: ["brazil", "argentina", "venezuela"] }, { name: "argentina", continent: "South America", owner: "none", color: "white", "army": 0, neighbours: ["brazil", "peru"] }, { name: "colombia", continent: "South America", owner: "none", color: "white", "army": 0, neighbours: ["brazil", "peru", "central_america"] }, { name: "iceland", continent: "europe", owner: "none", color: "white", "army": 0, neighbours: ["greenland", "uk", "scandinavia"] }, { name: "scandinavia", continent: "europe", owner: "none", color: "white", "army": 0, neighbours: ["iceland", "uk", "ukraine", "northern_europe"] }, { name: "northern_europe", continent: "europe", owner: "none", color: "white", "army": 0, neighbours: ["ukraine", "uk", "scandinavia", "southern_europe", "western_europe"] }, { name: "spain", continent: "europe", owner: "none", color: "white", "army": 0, neighbours: ["north_africa", "uk", "northern_europe", "southern_europe"] }, { name: "southern_europe", continent: "europe", owner: "none", color: "white", "army": 0, neighbours: ["north_africa", "egypt", "northern_europe", "western_europe", "middle_east", "ukraine"] }, { name: "uk", continent: "europe", owner: "none", color: "white", "army": 0, neighbours: ["western_europe", "iceland", "northern_europe", "scandinavia"] }, { name: "ukraine", continent: "europe", owner: "none", color: "white", "army": 0, neighbours: ["scandinavia", "ural", "northern_europe", "southern_europe", "afghanistan", "middle_east"] }, { name: "greenland", continent: "North America", owner: "none", color: "white", "army": 0, neighbours: ["iceland", "quebec", "ontario", "northwest_territory"] }, { name: "mexico", continent: "North America", owner: "none", color: "white", "army": 0, neighbours: ["venezuela", "eastern_us", "western_us"] }, { name: "eastern_us", continent: "North America", owner: "none", color: "white", "army": 0, neighbours: ["central_america", "quebec", "ontario", "western_us"] }, { name: "western_us", continent: "North America", owner: "none", color: "white", "army": 0, neighbours: ["eastern_us", "central_america", "ontario", "alberta"] }, { name: "alaska", continent: "North America", owner: "none", color: "white", "army": 0, neighbours: ["kamchatka", "alberta", "northwest_territory"] }, { name: "alberta", continent: "North America", owner: "none", color: "white", "army": 0, neighbours: ["alaska", "western_us", "ontario", "northwest_territory"] }, { name: "ontario", continent: "North America", owner: "none", color: "white", "army": 0, neighbours: ["greenland", "quebec", "alberta", "western_us", "eastern_us", "northwest_territory"] }, { name: "quebec", continent: "North America", owner: "none", color: "white", "army": 0, neighbours: ["greenland", "eastern_us", "ontario"] }, { name: "northwest_territory", continent: "North America", owner: "none", color: "white", "army": 0, neighbours: ["greenland", "alaska", "alberta", "ontario"] }];
+var countries = [{ name: "Indonesia", continent: "Oceania", owner: "none", color: "white", "army": 0, neighbours: ["Siam", "Western Australia", "New Guinea"] }, 
+{ name: "New Guinea", continent: "Oceania", owner: "none", color: "white", "army": 0, neighbours: ["Indonesia", "Eastern Australia", "Western Australia"] }, 
+{ name: "Eastern Australia", continent: "Oceania", owner: "none", color: "white", "army": 0, neighbours: ["Western Australia", "New Guinea"] }, 
+{ name: "Western Australia", continent: "Oceania", owner: "none", color: "white", "army": 0, neighbours: ["Eastern Australia", "New Guinea", "Indonesia"] }, 
+{ name: "Ural", continent: "Asia", owner: "none", color: "white", "army": 0, neighbours: ["Ukraine", "Siberia", "Afghanistan", "China"] }, 
+{ name: "Siberia", continent: "Asia", owner: "none", color: "white", "army": 0, neighbours: ["Ural", "Mongolia", "Yakutsk", "Irkutsk", "China"] }, 
+{ name: "Afghanistan", continent: "Asia", owner: "none", color: "white", "army": 0, neighbours: ["Ukraine", "Ural", "Middle East", "China", "India"] }, 
+{ name: "Irkutsk", continent: "Asia", owner: "none", color: "white", "army": 0, neighbours: ["Yakutsk", "Siberia", "Kamchatka", "Mongolia"] }, 
+{ name: "Yakutsk", continent: "Asia", owner: "none", color: "white", "army": 0, neighbours: ["Irkutsk", "Siberia", "Kamchatka"] }, 
+{ name: "Kamchatka", continent: "Asia", owner: "none", color: "white", "army": 0, neighbours: ["Alaska", "Yakutsk", "Japan", "Irkutsk", "Mongolia"] }, 
+{ name: "Middle East", continent: "Asia", owner: "none", color: "white", "army": 0, neighbours: ["Ukraine", "Afghanistan", "India", "Egypt", "East Africa", "Southern Europe"] }, 
+{ name: "India", continent: "Asia", owner: "none", color: "white", "army": 0, neighbours: ["Middle East", "Siam", "Afghanistan", "China"] }, 
+{ name: "Siam", continent: "Asia", owner: "none", color: "white", "army": 0, neighbours: ["Indonesia", "India", "China"] }, 
+{ name: "China", continent: "Asia", owner: "none", color: "white", "army": 0, neighbours: ["Ural", "Siberia", "Afghanistan", "Mongolia", "Siam", "India"] }, 
+{ name: "Mongolia", continent: "Asia", owner: "none", color: "white", "army": 0, neighbours: ["Irkutsk", "Siberia", "Kamchatka", "China", "Japan"] }, 
+{ name: "Japan", continent: "Asia", owner: "none", color: "white", "army": 0, neighbours: ["Kamchatka", "Mongolia"] }, 
+{ name: "Egypt", continent: "Africa", owner: "none", color: "white", "army": 0, neighbours: ["Middle East", "Southern Europe", "North Africa", "East Africa"] }, 
+{ name: "North Africa", continent: "Africa", owner: "none", color: "white", "army": 0, neighbours: ["Egypt", "Southern Europe", "Western Europe", "East Africa", "Congo", "Brazil"] }, 
+{ name: "East Africa", continent: "Africa", owner: "none", color: "white", "army": 0, neighbours: ["Middle East", "Egypt", "North Africa", "Congo", "Madagascar", "South Africa"] }, 
+{ name: "Congo", continent: "Africa", owner: "none", color: "white", "army": 0, neighbours: ["South Africa", "North Africa", "East Africa"] }, 
+{ name: "South Africa", continent: "Africa", owner: "none", color: "white", "army": 0, neighbours: ["Congo", "Madagascar", "East Africa"] }, 
+{ name: "Madagascar", continent: "Africa", owner: "none", color: "white", "army": 0, neighbours: ["South Africa", "East Africa"] }, 
+{ name: "Brazil", continent: "South America", owner: "none", color: "white", "army": 0, neighbours: ["Peru", "Argentina", "North Africa", "Colombia"] }, 
+{ name: "Peru", continent: "South America", owner: "none", color: "white", "army": 0, neighbours: ["Brazil", "Argentina", "Colombia"] }, 
+{ name: "Argentina", continent: "South America", owner: "none", color: "white", "army": 0, neighbours: ["Brazil", "Peru"] }, 
+{ name: "Colombia", continent: "South America", owner: "none", color: "white", "army": 0, neighbours: ["Brazil", "Peru", "Mexico"] }, 
+{ name: "Iceland", continent: "Europe", owner: "none", color: "white", "army": 0, neighbours: ["Greenland", "United Kingdom", "Scandinavia"] }, 
+{ name: "Scandinavia", continent: "Europe", owner: "none", color: "white", "army": 0, neighbours: ["Iceland", "United Kingdom", "Ukraine", "Northern Europe"] }, 
+{ name: "Northern Europe", continent: "Europe", owner: "none", color: "white", "army": 0, neighbours: ["Ukraine", "United Kingdom", "Scandinavia", "Southern Europe", "Spain"] }, 
+{ name: "Spain", continent: "Europe", owner: "none", color: "white", "army": 0, neighbours: ["North Africa", "United Kingdom", "Northern Europe", "Southern Europe"] }, 
+{ name: "Southern Europe", continent: "Europe", owner: "none", color: "white", "army": 0, neighbours: ["North Africa", "Egypt", "Northern Europe", "Spain", "Middle East", "Ukraine"] }, 
+{ name: "United Kingdom", continent: "Europe", owner: "none", color: "white", "army": 0, neighbours: ["Spain", "Iceland", "Northern Europe", "Scandinavia"] }, 
+{ name: "Ukraine", continent: "Europe", owner: "none", color: "white", "army": 0, neighbours: ["Scandinavia", "Ural", "Northern Europe", "Southern Europe", "Afghanistan", "Middle East"] }, 
+{ name: "Greenland", continent: "North America", owner: "none", color: "white", "army": 0, neighbours: ["Iceland", "Quebec", "Ontario", "Northwest Territory"] }, 
+{ name: "Mexico", continent: "North America", owner: "none", color: "white", "army": 0, neighbours: ["Colombia", "Eastern USA", "Western USA"] }, 
+{ name: "Eastern USA", continent: "North America", owner: "none", color: "white", "army": 0, neighbours: ["Mexico", "Quebec", "Ontario", "Western USA"] }, 
+{ name: "Western USA", continent: "North America", owner: "none", color: "white", "army": 0, neighbours: ["Eastern USA", "Mexico", "Ontario", "Alberta"] }, 
+{ name: "Alaska", continent: "North America", owner: "none", color: "white", "army": 0, neighbours: ["Kamchatka", "Alberta", "Northwest Territory"] }, 
+{ name: "Alberta", continent: "North America", owner: "none", color: "white", "army": 0, neighbours: ["Alaska", "Western USA", "Ontario", "Northwest Territory"] }, 
+{ name: "Ontario", continent: "North America", owner: "none", color: "white", "army": 0, neighbours: ["Greenland", "Quebec", "Alberta", "Western USA", "Eastern USA", "Northwest Territory"] },
+ { name: "Quebec", continent: "North America", owner: "none", color: "white", "army": 0, neighbours: ["Greenland", "Eastern USA", "Ontario"] }, 
+ { name: "Northwest Territory", continent: "North America", owner: "none", color: "white", "army": 0, neighbours: ["Greenland", "Alaska", "Alberta", "Ontario"] }];
 
 var players = [{
     "name": "Onur Genc",
@@ -96,7 +137,7 @@ var players = [{
     "areas": [],
     "bonus": 2,
     "alive": true
-}, { "name": "Van der Does",
+}, { "name": "P. Van der Does",
     "country": "Adyen",
     "color": "#40b45c",
     "army": 20,
@@ -648,8 +689,38 @@ Gamestate.battle = function (country, opponent, player, i) {
     }
 };
 
+// Definir un objeto con los datos de los países
+const countriesData = {
+    spain: {
+        potentialCustomers: 100, // Datos representativos para España, Portugal, y Francia combinados
+        averageSalary: 2733,     // Promedio de los salarios medios
+        digitalPayments: 70,     // Promedio de penetración de pagos digitales
+        competitionLevel: 4,     // Nivel de competencia calculado como promedio
+        investmentLevel: 6       // Nivel de inversión medio requerido para penetrar el mercado
+    },
+    colombia: {
+        potentialCustomers: 56,
+        averageSalary: 1000,
+        digitalPayments: 65,
+        competitionLevel: 5,
+        investmentLevel: 5
+    }
+    // Continúa con otros países...
+};
+
+const competitionLevels = {
+    1: "Blue Ocean",
+    2: "Parcial Blue Ocean",
+    3: "Competitive",
+    4: "Parcial Red Ocean",
+    5: "Red Ocean"
+};
+
 document.querySelectorAll('.area').forEach((country) => {
     country.addEventListener('mouseenter', (event) => {
+        const countryId = event.target.id;
+        const countryData = countriesData[countryId];
+
         // Muestra la ventana de información
         const popup = document.getElementById('info-popup');
         popup.style.display = 'block';
@@ -658,13 +729,13 @@ document.querySelectorAll('.area').forEach((country) => {
         popup.style.left = `${event.pageX + 10}px`;
         popup.style.top = `${event.pageY + 10}px`;
 
-        // Actualiza la información del país (esto debería ser dinámico)
-        document.getElementById('country-name').innerText = event.target.id; // Ejemplo de ID del país
-        document.getElementById('potential-customers').innerText = "100MM"; // Ejemplo de datos
-        document.getElementById('average-salary').innerText = "3000$"; // Ejemplo de datos
-        document.getElementById('digital-payments').innerText = "75%"; // Ejemplo de datos
-        document.getElementById('competition-level').innerText = "Blue Ocean"; // Ejemplo de datos
-        document.getElementById('investment-level').innerText = "High"; // Ejemplo de datos
+        // Actualiza la información del país con los datos almacenados
+        document.getElementById('country-name').innerText = countryId;
+        document.getElementById('potential-customers').innerText = `${countryData.potentialCustomers} MM`;
+        document.getElementById('average-salary').innerText = `${countryData.averageSalary} USD`;
+        document.getElementById('digital-payments').innerText = `${countryData.digitalPayments}%`;
+        document.getElementById('competition-level').innerText = competitionLevels[countryData.competitionLevel] || "Unknown";
+        document.getElementById('investment-level').innerText = `${countryData.investmentLevel} MM $`;
     });
 
     country.addEventListener('mouseleave', () => {
@@ -672,7 +743,6 @@ document.querySelectorAll('.area').forEach((country) => {
         document.getElementById('info-popup').style.display = 'none';
     });
 });
-
 
 //Initialize Game
 Gamestate.init();
