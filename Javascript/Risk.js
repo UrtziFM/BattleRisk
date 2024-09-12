@@ -691,14 +691,14 @@ Gamestate.battle = function (country, opponent, player, i) {
 
 // Definir un objeto con los datos de los países
 const countriesData = {
-    spain: {
+    Spain: {
         potentialCustomers: 100, // Datos representativos para España, Portugal, y Francia combinados
         averageSalary: 2733,     // Promedio de los salarios medios
         digitalPayments: 70,     // Promedio de penetración de pagos digitales
         competitionLevel: 4,     // Nivel de competencia calculado como promedio
         investmentLevel: 6       // Nivel de inversión medio requerido para penetrar el mercado
     },
-    colombia: {
+    Colombia: {
         potentialCustomers: 56,
         averageSalary: 1000,
         digitalPayments: 65,
