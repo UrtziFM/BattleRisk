@@ -1,18 +1,35 @@
 <!doctype html>
-<html>
+<html lang="en" dir="ltr">
 <head>
+    <!-- Required meta tags -->
     <meta charset="utf-8">
-    <link rel="stylesheet" href="Styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BattleRisk Game</title>
+
+    <!--Board Design features-->
+
+    <!--Bootstrap for CSS features-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" 
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!-- Bootstrap for JS features--> 
+    <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js" 
+    integrity="sha384-6khuMg9gaYr5AxOqhkVIODVIvm9ynTT5J4V1cfthmT+emCG6yVmEZsRHdxlotUnm" crossorigin="anonymous"></script>
+    <!--Google Icons-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Alfa+Slab+One" rel="stylesheet">
-    <title>Risk</title>
+    <!--Font Awesome-->
+    <script src="https://kit.fontawesome.com/5b14db5f0b.js" crossorigin="anonymous"></script>
+    <!--Main CSS Styles-->
+    <link rel="stylesheet" href="Styles.css">
 </head>
+
 <body>
 <div class="container">
     <div id="start-modal" class="overlay">
         <div id="modal" class="start-modal">
-            <p class="title">RISK</p>
-            <p>Leader</p><input id="chosen-leader" value="Napoleon"></input>
-            <p>Country</p><input id="chosen-country" value="France"></input><br>
+            <p class="title">PayRisk</p>
+            <p>CEO</p><input id="chosen-leader" value="Onur Genc"></input>
+            <p>Company</p><input id="chosen-country" value="BBVA"></input><br>
             <button id="submit-name">Start</button>
         </div>
     </div>
@@ -26,10 +43,10 @@
         </div>
     </div>
     <div class="player-panel">
-        <h1>RISK</h1>
+        <h1>PayRisk</h1>
         <div class="player-name"></div>
         <div class="player-country"></div>
-                <p class="reserve-title">Reserve:</p>
+                <p class="reserve-title">Resources:</p>
         <div class="reserve" id="reserve">2</div>
         <div class="turn-info"></div>
         <div class="turn-info-message"></div>
@@ -406,32 +423,32 @@
        <div class="info-one">
          <div class="leader"></div>
          <div class="country"></div>
-         <div>Income: <span class="income"></span></div>
+         <div class="round">Round Revenues: <span class="income"></span></div>
        </div> 
        <div class="info-two">
          <div class="leader"></div>
          <div class="country"></div>
-         <div>Income: <span class="income"></span></div>
+         <div class="round">Round Revenues: <span class="income"></span></div>
        </div> 
        <div class="info-three">
          <div class="leader"></div>
          <div class="country"></div>
-         <div>Income: <span class="income"></span></div>
+         <div class="round">Round Revenues: <span class="income"></span></div>
        </div> 
        <div class="info-four">
          <div class="leader"></div>
          <div class="country"></div>
-         <div>Income: <span class="income"></span></div>
+         <div class="round">Round Revenues: <span class="income"></span></div>
        </div> 
        <div class="info-five">
          <div class="leader"></div>
          <div class="country"></div>
-         <div>Income: <span class="income"></span></div>
+         <div class="round">Round Revenues: <span class="income"></span></div>
        </div> 
        <div class="info-six">
          <div class="leader"></div>
          <div class="country"></div>
-         <div>Income: <span class="income"></span></div>
+         <div class="round">Round Revenues: <span class="income"></span></div>
        </div>
        <button id="restart" class="restart">Restart Game</button>
     </div>   
