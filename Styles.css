@@ -1,26 +1,41 @@
+body {
+  background: black;
+  color: #ffffff;
+  font-family: "Alfa Slab One", sans-serif;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
 .container {
+    background: #b8e4fc;
     display: flex;
-    margin: 30px auto;
+    margin: 40px auto;
+    margin-bottom: 10px;
+    padding: 20px;
     max-width: 1100px;
     justify-content: space-between;
+    border-radius: 15px;
   }
-  
-  body {
-    background: #9a8d4c;
-    color: #ffffff;
-    font-family: "Alfa Slab One", sans-serif;
-    text-align: center;
+
+  .player-name {
+    font-family: Arial, Helvetica, sans-serif;
   }
   
   p {
     margin: 0;
     padding: 0;
   }
+
+  .reserve-title{
+    font-family: Arial, Helvetica, sans-serif;
+  }
   
   button {
     font-family: "Alfa Slab One", sans-serif;
     cursor: pointer;
-    background: #d6040e;
+    background: #08549c;
     text-shadow: 2px 2px #222;
     color: #fff;
     padding: 6px;
@@ -78,7 +93,7 @@
   }
   
   .player-panel {
-    background: #030f63;
+    background: black;
     width: 140px;
     height: 500px;
     text-shadow: 2px 2px #222;
@@ -93,7 +108,7 @@
   }
   
   .player-panel h1 {
-    color: #d6040e;
+    color: #08549c;
     text-shadow: 2px 2px #fff;
     font-size: 2.2em;
     margin: 5px 0 10px;
@@ -106,7 +121,7 @@
   }
   
   .turn-info {
-    color: #d6040e;
+    color: #08549c;
     text-shadow: 2px 2px #222;
     padding: 20px 0;
     font-size: 1.5em;
@@ -116,10 +131,6 @@
     font-family: 'arial';
     margin: 20px 0;
     font-size: 0.8em;
-  }
-  
-  .reserve-title {
-    margin: 5px 0;
   }
   
   .info {
@@ -213,6 +224,7 @@
   }
 
   .leader {
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 0.9em;
   }
 
@@ -221,6 +233,7 @@
   }
 
   .round {
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 0.9em;
   }
 
@@ -234,9 +247,8 @@
     height: 100vh;
   }
   
-  /* line 225, ../scss/main.scss */
   .content {
-    background: #917037;
+    background: #08549c;
     position: relative;
     width: 500px;
     top: 150px;
@@ -247,22 +259,21 @@
     padding: 10px;
   }
   
-  /* line 239, ../scss/main.scss */
   .start-modal {
     width: 400px;
-    background: #917037;
+    background: #089ce4;
     top: 100px;
     position: relative;
     margin: 0 auto;
     font-family: "Alfa Slab One", sans-serif;
     font-size: 2em;
     z-index: 6;
-    border: 4px solid #d6040e;
+    border: 4px solid black;
     border-radius: 5px;
     color: white;
     text-shadow: 2px 2px black;
   }
-  /* line 252, ../scss/main.scss */
+ 
   .start-modal input {
     font-size: 0.8em;
     padding: 4px;
@@ -270,31 +281,27 @@
     border-radius: 5px;
     margin: 5px 0;
   }
-  /* line 259, ../scss/main.scss */
+  
   .start-modal button {
     margin: 10px auto;
   }
   
-  /* line 264, ../scss/main.scss */
   .title {
     font-size: 2.5em;
-    color: #d6040e;
+    color: #08549c;
     text-shadow: 3px 3px white;
   }
   
-  /* line 273, ../scss/main.scss */
   .win-content button {
     margin: 15px auto;
   }
   
-  /* line 278, ../scss/main.scss */
   .win-message {
     font-size: 3rem;
     text-shadow: 2px 2px #fff;
     padding: 10px;
   }
   
-  /* line 286, ../scss/main.scss */
   .bonus-modal {
     display: none;
     position: absolute;
@@ -307,14 +314,72 @@
     text-shadow: 2px 2px #222;
   }
   
-  /* line 298, ../scss/main.scss */
   .bonus-modal-content {
     text-transform: capitalize;
   }
   
-  /* line 302, ../scss/main.scss */
   .bonus-modal-text {
     font-size: 2.5rem;
     text-shadow: 2px 2px #fff;
     padding: 10px;
   }
+
+  .containerRight {
+    flex: 1;
+    margin: 0 1%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .top {
+      background-color: #b8e4fc;
+      color: white;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      margin-left: 25px;
+  }
+
+  .topMoves {
+      background-color: black;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+  }
+
+  #top-moves {
+      background-color: black;
+      color: white;
+      border-radius: 5px;
+      padding: 5px;
+  }
+
+  .footerMain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: black;
+    padding: 5px 10px;
+    border-bottom-right-radius: 5px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+  .footerLink {
+      color: rgb(0, 81, 255);
+  }
+
+  .info-popup {
+    position: absolute;
+    background-color: black;
+    border: 1px solid #ddd;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: none; /* Oculto por defecto */
+    z-index: 1000;
+}
