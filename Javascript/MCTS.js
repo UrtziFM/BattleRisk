@@ -1,8 +1,10 @@
 // MCTS.js
+
 class Node {
-    constructor(state, parent = null) {
+    constructor(state, parent = null, move = null) {
         this.state = state; 
         this.parent = parent;
+        this.move = move; // The move that led to this state from the parent
         this.children = [];
         this.visits = 0;
         this.wins = 0;
@@ -22,12 +24,20 @@ class Node {
 }
 
 class MCTS {
-    constructor(iterations = 1000) {
+    constructor(iterations = 1000, stage) {
         this.iterations = iterations;
+        this.stage = stage; // 'Fortify' or 'Battle'
     }
 
     selectPromisingNode(node) {
-        let bestNode = node;
+        while (node.children.length !== 0) {
+            node = this.bestUCT(node);
+        }
+        return node;
+    }
+
+    bestUCT(node) {
+        let bestNode = null;
         let maxUCT = -Infinity;
         node.children.forEach(child => {
             let uctValue = (child.wins / child.visits) + Math.sqrt(2 * Math.log(node.visits) / child.visits);
@@ -40,21 +50,25 @@ class MCTS {
     }
 
     expandNode(node) {
-        const possibleStates = this.getPossibleStates(node.state);
-        possibleStates.forEach(state => {
-            const newNode = new Node(state, node);
+        const possibleMoves = this.getPossibleMoves(node.state);
+        possibleMoves.forEach(possibleMove => {
+            const newNode = new Node(possibleMove.state, node, possibleMove.move);
             node.addChild(newNode);
         });
     }
 
-    simulateRandomPlay(node) {
-        let currentNode = node;
-        while (!this.isTerminal(currentNode.state)) {
-            const possibleStates = this.getPossibleStates(currentNode.state);
-            if (possibleStates.length === 0) break; // Si no hay más estados posibles, detener
-            currentNode.state = possibleStates[Math.floor(Math.random() * possibleStates.length)];
+    simulateRandomPlayout(node) {
+        let tempState = JSON.parse(JSON.stringify(node.state));
+
+        while (!this.isTerminal(tempState)) {
+            const possibleMoves = this.getPossibleMoves(tempState);
+            if (possibleMoves.length === 0) break;
+            const randomMove = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
+            tempState = randomMove.state;
         }
-        return this.calculateScore(currentNode.state);
+
+        const score = this.calculateScore(tempState);
+        return score;
     }
 
     backPropagation(node, score) {
@@ -65,76 +79,155 @@ class MCTS {
         }
     }
 
-    getBestMove(rootNode) {
-        // Verifica si hay hijos antes de usar reduce
-        if (rootNode.children.length === 0) {
-            console.warn("No se encontraron movimientos posibles."); // Mensaje de advertencia para depuración
-            return rootNode.state; // Retorna el estado raíz si no hay movimientos posibles
-        }
-    
-        // Si hay hijos, aplica reduce para encontrar el mejor movimiento
-        let bestNode = rootNode.children.reduce((prev, curr) => (prev.visits > curr.visits ? prev : curr));
-        return bestNode.state;
-    }
-    
-
     runMCTS(rootState) {
         const rootNode = new Node(rootState);
+
         for (let i = 0; i < this.iterations; i++) {
             const promisingNode = this.selectPromisingNode(rootNode);
             if (!this.isTerminal(promisingNode.state)) {
                 this.expandNode(promisingNode);
             }
-            const nodeToExplore = promisingNode.children.length > 0 
-                ? promisingNode.children[Math.floor(Math.random() * promisingNode.children.length)] 
-                : promisingNode;
-            const score = this.simulateRandomPlay(nodeToExplore);
+            let nodeToExplore = promisingNode;
+            if (promisingNode.children.length > 0) {
+                nodeToExplore = promisingNode.children[Math.floor(Math.random() * promisingNode.children.length)];
+            }
+            const score = this.simulateRandomPlayout(nodeToExplore);
             this.backPropagation(nodeToExplore, score);
         }
-        return this.getBestMove(rootNode);
+
+        const bestNode = this.getBestMove(rootNode);
+        const moves = this.getBestMoves(bestNode);
+        return moves;
     }
 
-    getPossibleStates(state) {
-        const possibleStates = [];
+    getBestMove(rootNode) {
+        if (rootNode.children.length === 0) {
+            console.warn("No possible moves found.");
+            return rootNode;
+        }
 
-        if (!state || !state.countries || !state.currentPlayer) return possibleStates;
+        const bestChild = rootNode.children.reduce((prev, curr) => (prev.visits > curr.visits ? prev : curr));
+        return bestChild;
+    }
 
+    getBestMoves(node) {
+        const moves = [];
+        while (node.parent !== null && node.move !== null) {
+            moves.unshift(node.move);
+            node = node.parent;
+        }
+        return moves;
+    }
+
+    getPossibleMoves(state) {
+        if (this.stage === 'Fortify') {
+            return this.getFortifyMoves(state);
+        } else if (this.stage === 'Battle') {
+            return this.getBattleMoves(state);
+        }
+        return [];
+    }
+
+    getFortifyMoves(state) {
+        const possibleMoves = [];
+
+        if (!state || !state.countries || !state.currentPlayer || state.currentPlayer.reserve <= 0) {
+            return possibleMoves;
+        }
+
+        // Generate possible fortify moves by adding troops to own countries
         state.countries.forEach(country => {
             if (country.owner === state.currentPlayer.name) {
+                const newState = JSON.parse(JSON.stringify(state));
+                const newCountry = newState.countries.find(c => c.name === country.name);
+                const newPlayer = newState.currentPlayer;
+
+                // Distribute troops (for simplicity, add one troop per move)
+                newCountry.army += 1;
+                newPlayer.reserve -= 1;
+
+                const move = {
+                    type: 'fortify',
+                    country: country.name,
+                    troops: 1
+                };
+
+                possibleMoves.push({ state: newState, move: move });
+            }
+        });
+
+        return possibleMoves;
+    }
+
+    getBattleMoves(state) {
+        const possibleMoves = [];
+
+        if (!state || !state.countries || !state.currentPlayer) return possibleMoves;
+
+        state.countries.forEach(country => {
+            if (country.owner === state.currentPlayer.name && country.army > 1) {
                 country.neighbours.forEach(neighbourName => {
                     const neighbour = state.countries.find(c => c.name === neighbourName);
                     if (neighbour && neighbour.owner !== state.currentPlayer.name) {
-                        const newState = this.simulateMove(state, country, neighbour);
-                        possibleStates.push(newState);
+                        const { newState, move } = this.simulateAttack(state, country, neighbour);
+                        possibleMoves.push({ state: newState, move: move });
                     }
                 });
             }
         });
 
-        return possibleStates;
+        return possibleMoves;
     }
 
-    simulateMove(state, fromCountry, toCountry) {
-        const newState = JSON.parse(JSON.stringify(state)); // Clonar el estado actual
+    simulateAttack(state, fromCountry, toCountry) {
+        const newState = JSON.parse(JSON.stringify(state)); // Clone the state
 
         const newFromCountry = newState.countries.find(c => c.name === fromCountry.name);
         const newToCountry = newState.countries.find(c => c.name === toCountry.name);
 
-        const successProbability = newFromCountry.army / (newFromCountry.army + newToCountry.army);
-        if (Math.random() < successProbability) {
+        // Simple dice roll simulation based on Risk rules
+        const attackerDice = Math.min(newFromCountry.army - 1, 3);
+        const defenderDice = Math.min(newToCountry.army, 2);
+
+        const attackerRolls = Array.from({ length: attackerDice }, () => Math.floor(Math.random() * 6) + 1).sort((a, b) => b - a);
+        const defenderRolls = Array.from({ length: defenderDice }, () => Math.floor(Math.random() * 6) + 1).sort((a, b) => b - a);
+
+        for (let i = 0; i < Math.min(attackerDice, defenderDice); i++) {
+            if (attackerRolls[i] > defenderRolls[i]) {
+                newToCountry.army -= 1;
+            } else {
+                newFromCountry.army -= 1;
+            }
+        }
+
+        // Handle capture of the country
+        if (newToCountry.army <= 0) {
             newToCountry.owner = state.currentPlayer.name;
-            newToCountry.army = Math.floor(newFromCountry.army / 2);
-            newFromCountry.army = Math.ceil(newFromCountry.army / 2);
+            const armiesToMove = attackerDice;
+            newToCountry.army = armiesToMove;
+            newFromCountry.army -= armiesToMove;
 
             const player = newState.players.find(p => p.name === state.currentPlayer.name);
             if (player) {
                 player.areas.push(newToCountry.name);
             }
-        } else {
-            newFromCountry.army -= Math.ceil(newToCountry.army / 2);
+
+            const defendingPlayer = newState.players.find(p => p.name === toCountry.owner);
+            if (defendingPlayer) {
+                const index = defendingPlayer.areas.indexOf(newToCountry.name);
+                if (index !== -1) {
+                    defendingPlayer.areas.splice(index, 1);
+                }
+            }
         }
 
-        return newState;
+        const move = {
+            type: 'attack',
+            from: fromCountry.name,
+            to: toCountry.name
+        };
+
+        return { newState, move };
     }
 
     calculateScore(state) {
@@ -143,19 +236,24 @@ class MCTS {
         if (!currentPlayer) return 0;
 
         let score = 0;
-        score += currentPlayer.areas.length * 10; // Más áreas controladas, mejor
-        const controlledContinents = this.getControlledContinents(currentPlayer, state);
-        score += controlledContinents.length * 50; // Controlar un continente otorga puntos extra
 
-        currentPlayer.areas.forEach(areaName => {
-            const countryData = countriesData[areaName];
-            if (countryData) {
-                score += countryData.potentialCustomers * 0.1;
-                score += countryData.digitalPayments * 0.5;
-                score -= countryData.competitionLevel * 2;
-                score -= countryData.investmentLevel * 1;
-            }
-        });
+        if (this.stage === 'Fortify') {
+            // Higher score for strengthening vulnerable positions
+            score = currentPlayer.areas.reduce((sum, areaName) => {
+                const country = state.countries.find(c => c.name === areaName);
+                const enemyNeighbors = country.neighbours.filter(neighbourName => {
+                    const neighbour = state.countries.find(c => c.name === neighbourName);
+                    return neighbour && neighbour.owner !== currentPlayer.name;
+                }).length;
+                return sum + (country.army * 2) - (enemyNeighbors * 3);
+            }, 0);
+        } else if (this.stage === 'Battle') {
+            // Higher score for more territories
+            score = currentPlayer.areas.length * 10;
+            // Bonus for controlling continents
+            const controlledContinents = this.getControlledContinents(currentPlayer, state);
+            score += controlledContinents.length * 50;
+        }
 
         return score;
     }
@@ -172,41 +270,32 @@ class MCTS {
     }
 
     isTerminal(state) {
-        if (!state || !state.players) return false;
-        const remainingPlayers = state.players.filter(player => player.areas.length > 0);
-        if (remainingPlayers.length === 1) {
-            return true;
+        if (this.stage === 'Fortify') {
+            return state.currentPlayer.reserve <= 0;
         }
 
-        const currentPlayer = state.players.find(p => p.name === state.currentPlayer.name);
-        if (!currentPlayer) return false;
-
-        const totalIncome = this.calculateIncome(currentPlayer, state);
-        if (totalIncome >= currentPlayer.targetIncome) {
-            return true;
+        if (this.stage === 'Battle') {
+            const canAttack = state.countries.some(country => {
+                if (country.owner === state.currentPlayer.name && country.army > 1) {
+                    return country.neighbours.some(neighbourName => {
+                        const neighbour = state.countries.find(c => c.name === neighbourName);
+                        return neighbour && neighbour.owner !== state.currentPlayer.name;
+                    });
+                }
+                return false;
+            });
+            return !canAttack;
         }
 
         return false;
     }
-
-    calculateIncome(player, state) {
-        if (!player || !player.areas) return 0;
-        let income = 0;
-        player.areas.forEach(areaName => {
-            const countryData = countriesData[areaName];
-            if (countryData) {
-                income += countryData.potentialCustomers * (countryData.digitalPayments / 100);
-            }
-        });
-        return income;
-    }
 }
 
 // Function to generate the top moves
-function generateTopMoves(currentState) {
-    const mcts = new MCTS(1000); // Number of iterations
-    const bestState = mcts.runMCTS(currentState);
-    return bestState; // Return the best state found
+function generateTopMoves(currentState, stage) {
+    const mcts = new MCTS(1000, stage); // Number of iterations
+    const moves = mcts.runMCTS(currentState);
+    return moves; // Return the sequence of moves leading to the best state
 }
 
 // Integrate with your game logic
@@ -217,64 +306,46 @@ function getTopMovesForPlayer(player) {
         currentPlayer: player
     };
 
-    const bestState = generateTopMoves(currentState);
+    const stage = Gamestate.stage; // 'Fortify', 'Battle', or 'AI Turn'
 
-    // Obtén los movimientos recomendados comparando el estado actual con el mejor estado encontrado
-    let recommendedMoves = getRecommendedMoves(Gamestate, bestState);
-    
-    // Filtrar solo los 5 mejores movimientos
-    recommendedMoves = recommendedMoves.slice(0, 5); 
-
-    // Renderiza los movimientos recomendados en el HTML
+    const recommendButton = document.getElementById('recommend-btn');
     const topMovesDiv = document.getElementById("top-moves");
-    topMovesDiv.innerHTML = ''; // Limpia las recomendaciones anteriores
 
-    // Formatea los movimientos para mostrarlos como texto legible
+    if (stage === 'AI Turn') {
+        // Disable recommendations button
+        recommendButton.disabled = true;
+        topMovesDiv.innerHTML = '<p>No recommendations during AI Turn.</p>';
+        return;
+    } else {
+        // Enable recommendations button
+        recommendButton.disabled = false;
+    }
+
+    const moves = generateTopMoves(currentState, stage);
+
+    // Get only the top 5 moves
+    const recommendedMoves = moves.slice(0, 5);
+
+    // Render the recommended moves in the HTML
+    topMovesDiv.innerHTML = ''; // Clear previous recommendations
+
+    // Format the moves to display as readable text
     recommendedMoves.forEach((move, index) => {
         const moveElement = document.createElement('p');
-        moveElement.innerHTML = `${index + 1}. Mueve tropas de <strong>${move.from}</strong> a <strong>${move.to}</strong> (Objetivo: ${move.target})`;
+        if (stage === 'Fortify') {
+            moveElement.innerHTML = `${index + 1}. Allocate <strong>${move.troops}</strong> troop(s) to <strong>${move.country}</strong>`;
+        } else if (stage === 'Battle') {
+            moveElement.innerHTML = `${index + 1}. Attack from <strong>${move.from}</strong> to <strong>${move.to}</strong>`;
+        }
         topMovesDiv.appendChild(moveElement);
     });
 }
 
-// Función para obtener las recomendaciones de movimientos basadas en la diferencia entre el estado actual y el mejor estado encontrado
-function getRecommendedMoves(currentState, bestState) {
-    const moves = [];
-
-    bestState.countries.forEach((country, index) => {
-        const originalCountry = currentState.countries.find(c => c.name === country.name);
-
-        if (originalCountry && originalCountry.owner !== country.owner) {
-            // Añade el movimiento de invasión
-            moves.push({
-                from: originalCountry.name,
-                to: country.name,
-                target: country.owner
-            });
-        }
-    });
-
-    // Ordenar los movimientos según alguna lógica de preferencia, por ejemplo, el tamaño del ejército o la importancia estratégica
-    moves.sort((a, b) => {
-        // Supongamos que tienes una función para calcular la importancia de cada movimiento
-        return calculateMoveScore(b) - calculateMoveScore(a); // Ordena de mayor a menor
-    });
-
-    return moves;
-}
-
-// Supongamos que tienes una función para calcular la puntuación de cada movimiento
-function calculateMoveScore(move) {
-    // Lógica para calcular la importancia de un movimiento basado en su potencial estratégico
-    // Puedes usar factores como la cantidad de tropas, la importancia del país, etc.
-    return Math.random(); // Solo como ejemplo, reemplaza con tu lógica
-}
-
-// Espera a que el DOM esté completamente cargado
+// Wait for the DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', (event) => {
     const recommendButton = document.getElementById('recommend-btn');
     
     recommendButton.addEventListener('click', () => {
-        getTopMovesForPlayer(Gamestate.player); // Llama a la función para obtener recomendaciones cuando se hace clic
+        getTopMovesForPlayer(Gamestate.player); // Call the function to get recommendations when clicked
     });
 });
