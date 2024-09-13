@@ -41,13 +41,14 @@ body {
     padding: 6px;
     font-size: 1.05em;
     text-align: center;
-    margin: 0 auto;
+    margin: 5px auto;
     border-radius: 5px;
   }
  
   button:hover {
     background: #089ce4;
   }
+
   
   .flash {
     animation: flash 2.5s;
@@ -326,7 +327,7 @@ body {
 
   .containerRight {
     flex: 1;
-    margin: 0 1%;
+    margin: 5px 1%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -336,18 +337,13 @@ body {
   .top {
       background-color: #b8e4fc;
       color: white;
-      padding: 15px;
+      padding: 5px;
       border-radius: 5px;
-      margin-bottom: 15px;
-      margin-left: 25px;
   }
 
-  .topMoves {
-      background-color: black;
-      color: white;
-      padding: 10px;
-      border-radius: 5px;
-      margin-bottom: 10px;
+  #recommend-btn {
+    margin: 10px;
+    padding: 10px;
   }
 
   #top-moves {
