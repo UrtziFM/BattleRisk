@@ -689,14 +689,13 @@ Gamestate.battle = function (country, opponent, player, i) {
     }
 };
 
-// Definir un objeto con los datos de los países
 const countriesData = {
     Spain: {
-        potentialCustomers: 100, // Datos representativos para España, Portugal, y Francia combinados
-        averageSalary: 2733,     // Promedio de los salarios medios
-        digitalPayments: 70,     // Promedio de penetración de pagos digitales
-        competitionLevel: 4,     // Nivel de competencia calculado como promedio
-        investmentLevel: 6       // Nivel de inversión medio requerido para penetrar el mercado
+        potentialCustomers: 100, // Representative data for Spain, Portugal, and France combined
+        averageSalary: 2733,     // Average of median salaries
+        digitalPayments: 70,     // Average digital payments penetration
+        competitionLevel: 4,     // Average competition level (1 to 5 Very High)
+        investmentLevel: 6       // Average investment level required to enter the market (1 to 10 Very High))
     },
     Colombia: {
         potentialCustomers: 56,
@@ -704,9 +703,289 @@ const countriesData = {
         digitalPayments: 65,
         competitionLevel: 5,
         investmentLevel: 5
+    },
+    Indonesia: {
+        potentialCustomers: 273, 
+        averageSalary: 420,      
+        digitalPayments: 60,     
+        competitionLevel: 4,
+        investmentLevel: 4
+    },
+    "New Guinea": {
+        potentialCustomers: 9,
+        averageSalary: 250,
+        digitalPayments: 20,
+        competitionLevel: 2,
+        investmentLevel: 1
+    },
+    "Eastern Australia": {
+        potentialCustomers: 15,
+        averageSalary: 5000,
+        digitalPayments: 80,
+        competitionLevel: 5,
+        investmentLevel: 6
+    },
+    "Western Australia": {
+        potentialCustomers: 10,
+        averageSalary: 5000,
+        digitalPayments: 80,
+        competitionLevel: 5,
+        investmentLevel: 7
+    },
+    Ural: {
+        potentialCustomers: 100,
+        averageSalary: 1000,
+        digitalPayments: 60,
+        competitionLevel: 4,
+        investmentLevel: 4
+    },
+    Siberia: {
+        potentialCustomers: 14,
+        averageSalary: 1000,
+        digitalPayments: 60,
+        competitionLevel: 3,
+        investmentLevel: 1
+    },
+    Irkutsk: {
+        potentialCustomers: 10,
+        averageSalary: 1000,
+        digitalPayments: 60,
+        competitionLevel: 3,
+        investmentLevel: 1
+    },
+    Yakutsk: {
+        potentialCustomers: 8,
+        averageSalary: 1000,
+        digitalPayments: 60,
+        competitionLevel: 3,
+        investmentLevel: 1
+    },
+    Kamchatka: {
+        potentialCustomers: 2,
+        averageSalary: 1000,
+        digitalPayments: 60,
+        competitionLevel: 4,
+        investmentLevel: 2
+    },
+    Afghanistan: {
+        potentialCustomers: 38,
+        averageSalary: 100,
+        digitalPayments: 10,
+        competitionLevel: 1,
+        investmentLevel: 2
+    },
+    "Middle East": { 
+        potentialCustomers: 128,
+        averageSalary: 1667,
+        digitalPayments: 63,
+        competitionLevel: 4,
+        investmentLevel: 5
+    },
+    India: {
+        potentialCustomers: 1300,
+        averageSalary: 400,
+        digitalPayments: 70,
+        competitionLevel: 5,
+        investmentLevel: 8
+    },
+    Siam: {
+        potentialCustomers: 70,
+        averageSalary: 700,
+        digitalPayments: 60,
+        competitionLevel: 3,
+        investmentLevel: 5
+    },
+    China: {
+        potentialCustomers: 1400,
+        averageSalary: 1000,
+        digitalPayments: 90,
+        competitionLevel: 5,
+        investmentLevel: 9
+    },
+    Mongolia: {
+        potentialCustomers: 3,
+        averageSalary: 400,
+        digitalPayments: 40,
+        competitionLevel: 2,
+        investmentLevel: 2
+    },
+    Japan: {
+        potentialCustomers: 126,
+        averageSalary: 3000,
+        digitalPayments: 80,
+        competitionLevel: 5,
+        investmentLevel: 8
+    },
+    Egypt: {
+        potentialCustomers: 102,
+        averageSalary: 250,
+        digitalPayments: 40,
+        competitionLevel: 3,
+        investmentLevel: 3
+    },
+    "North Africa": { 
+        potentialCustomers: 268,
+        averageSalary: 250,
+        digitalPayments: 33,
+        competitionLevel: 3,
+        investmentLevel: 3
+    },
+    "East Africa": { // Review Data
+        potentialCustomers: 58,
+        averageSalary: 75,
+        digitalPayments: 12,
+        competitionLevel: 1,
+        investmentLevel: 1
+    },
+    Congo: {
+        potentialCustomers: 89,
+        averageSalary: 100,
+        digitalPayments: 20,
+        competitionLevel: 1,
+        investmentLevel: 2
+    },
+    "South Africa": {
+        potentialCustomers: 59,
+        averageSalary: 1300,
+        digitalPayments: 60,
+        competitionLevel: 3,
+        investmentLevel: 4
+    },
+    Madagascar: {
+        potentialCustomers: 27,
+        averageSalary: 100,
+        digitalPayments: 20,
+        competitionLevel: 1,
+        investmentLevel: 2
+    },
+    Brazil: {
+        potentialCustomers: 212,
+        averageSalary: 600,
+        digitalPayments: 70,
+        competitionLevel: 5,
+        investmentLevel: 8
+    },
+    Peru: {
+        potentialCustomers: 33,
+        averageSalary: 500,
+        digitalPayments: 50,
+        competitionLevel: 3,
+        investmentLevel: 6
+    },
+    Argentina: {
+        potentialCustomers: 45,
+        averageSalary: 700,
+        digitalPayments: 60,
+        competitionLevel: 4,
+        investmentLevel: 6
+    },
+    Iceland: {
+        potentialCustomers: 0.36,
+        averageSalary: 5000,
+        digitalPayments: 90,
+        competitionLevel: 3,
+        investmentLevel: 5
+    },
+    Scandinavia: {
+        potentialCustomers: 21, // Combined population of Norway, Sweden, and Denmark
+        averageSalary: 4000,
+        digitalPayments: 90,
+        competitionLevel: 5,
+        investmentLevel: 6
+    },
+    "Northern Europe": {
+        potentialCustomers: 128, 
+        averageSalary: 3750,
+        digitalPayments: 85,
+        competitionLevel: 5,
+        investmentLevel: 7
+    },
+    "Southern Europe": {
+        potentialCustomers: 140, 
+        averageSalary: 1300,
+        digitalPayments: 60,
+        competitionLevel: 4,
+        investmentLevel: 5
+    },
+    "United Kingdom": {
+        potentialCustomers: 67,
+        averageSalary: 3500,
+        digitalPayments: 80,
+        competitionLevel: 5,
+        investmentLevel: 8
+    },
+    Ukraine: {
+        potentialCustomers: 44,
+        averageSalary: 500,
+        digitalPayments: 40,
+        competitionLevel: 3,
+        investmentLevel: 3
+    },
+    Greenland: {
+        potentialCustomers: 0.056,
+        averageSalary: 3000,
+        digitalPayments: 60,
+        competitionLevel: 1,
+        investmentLevel: 5
+    },
+    Mexico: {
+        potentialCustomers: 128,
+        averageSalary: 700,
+        digitalPayments: 60,
+        competitionLevel: 5,
+        investmentLevel: 3
+    },
+    "Eastern USA": {
+        potentialCustomers: 166,
+        averageSalary: 4500,
+        digitalPayments: 85,
+        competitionLevel: 5,
+        investmentLevel: 10
+    },
+    "Western USA": {
+        potentialCustomers: 165,
+        averageSalary: 4500,
+        digitalPayments: 85,
+        competitionLevel: 5,
+        investmentLevel: 10
+    },
+    Alaska: {
+        potentialCustomers: 0.73, 
+        averageSalary: 5000,
+        digitalPayments: 80,
+        competitionLevel: 5,
+        investmentLevel: 4
+    },
+    Alberta: {
+        potentialCustomers: 4.4,
+        averageSalary: 4000,
+        digitalPayments: 80,
+        competitionLevel: 4,
+        investmentLevel: 6
+    },
+    Ontario: {
+        potentialCustomers: 14.8, 
+        averageSalary: 4000,
+        digitalPayments: 80,
+        competitionLevel: 5,
+        investmentLevel: 6
+    },
+    Quebec: {
+        potentialCustomers: 8.5, 
+        averageSalary: 3500,
+        digitalPayments: 75,
+        competitionLevel: 4,
+        investmentLevel: 5
+    },
+    "Northwest Territory": {
+        potentialCustomers: 0.045, 
+        averageSalary: 4200,
+        digitalPayments: 70,
+        competitionLevel: 2,
+        investmentLevel: 1
     }
-    // Continúa con otros países...
 };
+
 
 const competitionLevels = {
     1: "Blue Ocean",
