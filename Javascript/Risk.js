@@ -986,6 +986,59 @@ const countriesData = {
     }
 };
 
+// Function to calculate net expected annual income for a country
+function calculateExpectedIncome(countryData) {
+    // Step 1: Calculate Serviceable Available Market (SAM)
+    const potentialCustomers = countryData.potentialCustomers * 1_000_000; // Convert millions to individuals
+    const digitalPaymentsPenetration = countryData.digitalPayments / 100;   // Convert percentage to decimal
+    const SAM = potentialCustomers * digitalPaymentsPenetration;
+
+    // Step 2: Estimate Market Share based on competition level
+    const baseMarketShare = 0.15; // 15% Base Goal
+    const competitionAdjustment = (6 - countryData.competitionLevel) / 5;  // Adjust between 0.2 and 1
+    const marketShare = baseMarketShare * competitionAdjustment;
+
+    const estimatedUsers = SAM * marketShare;
+
+    // Step 3: Determine Average Transaction Value (ATV) per User
+    const annualSalary = countryData.averageSalary * 12; // Monthly to annual salary
+    const annualSpendPerUser = annualSalary * 0.2;       // 20% of annual salary
+
+    // Step 4: Calculate Total Transaction Value (TTV)
+    const totalTransactionValue = estimatedUsers * annualSpendPerUser;
+
+    // Step 5: Estimate Revenue Based on Transaction Fees
+    const transactionFeeRate = 0.01; // 1% transaction fee
+    const expectedAnnualIncome = totalTransactionValue * transactionFeeRate;
+
+    // Step 6: Calculate Annual Investment Cost with Scaling
+    const baseInvestmentCost = 1_000_000; // Base investment cost per investment level point
+
+    let scaleFactor;
+
+    // Determine the scale factor based on the investment level
+    if (countryData.investmentLevel >= 1 && countryData.investmentLevel <= 3) {
+        scaleFactor = 0.1;
+    } else if (countryData.investmentLevel >= 4 && countryData.investmentLevel <= 5) {
+        scaleFactor = 3;
+    } else if (countryData.investmentLevel >= 6 && countryData.investmentLevel <= 8) {
+        scaleFactor = 5;
+    } else if (countryData.investmentLevel >= 9 && countryData.investmentLevel <= 10) {
+        scaleFactor = 8;
+    } else {
+        // Handle unexpected investment levels
+        scaleFactor = 1;
+    }
+
+    const annualInvestmentCost = countryData.investmentLevel * baseInvestmentCost * scaleFactor;
+
+    // Step 7: Calculate Net Expected Annual Income
+    const netExpectedAnnualIncome = expectedAnnualIncome - annualInvestmentCost;
+
+    // Return the net expected annual income
+    return netExpectedAnnualIncome;
+}
+
 
 const competitionLevels = {
     1: "Blue Ocean",
@@ -1000,21 +1053,34 @@ document.querySelectorAll('.area').forEach((country) => {
         const countryId = event.target.id;
         const countryData = countriesData[countryId];
 
-        // Muestra la ventana de información
-        const popup = document.getElementById('info-popup');
-        popup.style.display = 'block';
+        if (countryData) {
+            // Calculate expected annual income for the country
+            const expectedIncome = calculateExpectedIncome(countryData);
 
-        // Posiciona la ventana cerca del cursor
-        popup.style.left = `${event.pageX + 10}px`;
-        popup.style.top = `${event.pageY + 10}px`;
+            // Muestra la ventana de información
+            const popup = document.getElementById('info-popup');
+            popup.style.display = 'block';
 
-        // Actualiza la información del país con los datos almacenados
-        document.getElementById('country-name').innerText = countryId;
-        document.getElementById('potential-customers').innerText = `${countryData.potentialCustomers} MM`;
-        document.getElementById('average-salary').innerText = `${countryData.averageSalary} USD`;
-        document.getElementById('digital-payments').innerText = `${countryData.digitalPayments}%`;
-        document.getElementById('competition-level').innerText = competitionLevels[countryData.competitionLevel] || "Unknown";
-        document.getElementById('investment-level').innerText = `${countryData.investmentLevel} MM $`;
+            // Posiciona la ventana cerca del cursor
+            popup.style.left = `${event.pageX + 10}px`;
+            popup.style.top = `${event.pageY + 10}px`;
+
+            // Actualiza la información del país con los datos almacenados
+            document.getElementById('country-name').innerText = countryId;
+            document.getElementById('potential-customers').innerText = `${countryData.potentialCustomers} MM`;
+            document.getElementById('average-salary').innerText = `${countryData.averageSalary} USD`;
+            document.getElementById('digital-payments').innerText = `${countryData.digitalPayments}%`;
+            document.getElementById('competition-level').innerText = competitionLevels[countryData.competitionLevel] || "Unknown";
+            document.getElementById('investment-level').innerText = `${countryData.investmentLevel} MM $`;
+
+            // Format expectedIncome to a readable number (e.g., in millions)
+            const expectedIncomeInMillions = (expectedIncome / 1_000_000).toFixed(2);
+
+            document.getElementById('expected-income').innerText = `${expectedIncomeInMillions} MM $`;
+        } else {
+            // Hide the information popup if no data is available
+            document.getElementById('info-popup').style.display = 'none';
+        }
     });
 
     country.addEventListener('mouseleave', () => {
@@ -1023,5 +1089,5 @@ document.querySelectorAll('.area').forEach((country) => {
     });
 });
 
-//Initialize Game
+// Initialize Game
 Gamestate.init();

@@ -325,6 +325,12 @@ body {
     padding: 10px;
   }
 
+  .incomes {
+    font-size: 1.01rem;
+    color: green;
+    font-weight: bold;
+  }
+
   .containerRight {
     flex: 1;
     margin: 5px 1%;
