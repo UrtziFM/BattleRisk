@@ -694,78 +694,78 @@ const countriesData = {
         potentialCustomers: 100, // Representative data for Spain, Portugal, and France combined
         averageSalary: 2733,     // Average of median salaries
         digitalPayments: 70,     // Average digital payments penetration
-        competitionLevel: 4,     // Average competition level (1 to 5 Very High)
-        investmentLevel: 6       // Average investment level required to enter the market (1 to 10 Very High))
+        competitionLevel: 5,     // Average competition level (1 to 5 Very High)
+        investmentLevel: 7       // Average investment level required to enter the market (1 to 10 Very High))
     },
     Colombia: {
         potentialCustomers: 56,
-        averageSalary: 1000,
-        digitalPayments: 65,
-        competitionLevel: 5,
+        averageSalary: 800,
+        digitalPayments: 45,
+        competitionLevel: 4,
         investmentLevel: 5
     },
     Indonesia: {
         potentialCustomers: 273, 
         averageSalary: 420,      
-        digitalPayments: 60,     
+        digitalPayments: 50,     
         competitionLevel: 4,
-        investmentLevel: 4
+        investmentLevel: 8
     },
     "New Guinea": {
         potentialCustomers: 9,
         averageSalary: 250,
         digitalPayments: 20,
-        competitionLevel: 2,
+        competitionLevel: 1,
         investmentLevel: 1
     },
     "Eastern Australia": {
         potentialCustomers: 15,
         averageSalary: 5000,
         digitalPayments: 80,
-        competitionLevel: 5,
-        investmentLevel: 6
+        competitionLevel: 4,
+        investmentLevel: 8
     },
     "Western Australia": {
         potentialCustomers: 10,
         averageSalary: 5000,
         digitalPayments: 80,
-        competitionLevel: 5,
-        investmentLevel: 7
+        competitionLevel: 4,
+        investmentLevel: 8
     },
     Ural: {
         potentialCustomers: 100,
-        averageSalary: 1000,
-        digitalPayments: 60,
+        averageSalary: 400,
+        digitalPayments: 50,
         competitionLevel: 4,
-        investmentLevel: 4
+        investmentLevel: 5
     },
     Siberia: {
         potentialCustomers: 14,
-        averageSalary: 1000,
-        digitalPayments: 60,
-        competitionLevel: 3,
+        averageSalary: 400,
+        digitalPayments: 50,
+        competitionLevel: 2,
         investmentLevel: 1
     },
     Irkutsk: {
         potentialCustomers: 10,
-        averageSalary: 1000,
-        digitalPayments: 60,
-        competitionLevel: 3,
+        averageSalary: 400,
+        digitalPayments: 50,
+        competitionLevel: 2,
         investmentLevel: 1
     },
     Yakutsk: {
         potentialCustomers: 8,
-        averageSalary: 1000,
-        digitalPayments: 60,
-        competitionLevel: 3,
+        averageSalary: 400,
+        digitalPayments: 50,
+        competitionLevel: 2,
         investmentLevel: 1
     },
     Kamchatka: {
         potentialCustomers: 2,
-        averageSalary: 1000,
-        digitalPayments: 60,
-        competitionLevel: 4,
-        investmentLevel: 2
+        averageSalary: 400,
+        digitalPayments: 50,
+        competitionLevel: 2,
+        investmentLevel: 1
     },
     Afghanistan: {
         potentialCustomers: 38,
@@ -778,29 +778,29 @@ const countriesData = {
         potentialCustomers: 128,
         averageSalary: 1667,
         digitalPayments: 63,
-        competitionLevel: 4,
-        investmentLevel: 5
+        competitionLevel: 5,
+        investmentLevel: 8
     },
     India: {
-        potentialCustomers: 1300,
+        potentialCustomers: 1100,
         averageSalary: 400,
         digitalPayments: 70,
         competitionLevel: 5,
-        investmentLevel: 8
+        investmentLevel: 9
     },
     Siam: {
         potentialCustomers: 70,
         averageSalary: 700,
         digitalPayments: 60,
-        competitionLevel: 3,
-        investmentLevel: 5
+        competitionLevel: 4,
+        investmentLevel: 7
     },
     China: {
-        potentialCustomers: 1400,
-        averageSalary: 1000,
+        potentialCustomers: 1100,
+        averageSalary: 600,
         digitalPayments: 90,
         competitionLevel: 5,
-        investmentLevel: 9
+        investmentLevel: 10
     },
     Mongolia: {
         potentialCustomers: 3,
@@ -814,7 +814,7 @@ const countriesData = {
         averageSalary: 3000,
         digitalPayments: 80,
         competitionLevel: 5,
-        investmentLevel: 8
+        investmentLevel: 9
     },
     Egypt: {
         potentialCustomers: 102,
@@ -828,9 +828,9 @@ const countriesData = {
         averageSalary: 250,
         digitalPayments: 33,
         competitionLevel: 3,
-        investmentLevel: 3
+        investmentLevel: 7
     },
-    "East Africa": { // Review Data
+    "East Africa": { 
         potentialCustomers: 58,
         averageSalary: 75,
         digitalPayments: 12,
@@ -848,64 +848,64 @@ const countriesData = {
         potentialCustomers: 59,
         averageSalary: 1300,
         digitalPayments: 60,
-        competitionLevel: 3,
-        investmentLevel: 4
+        competitionLevel: 4,
+        investmentLevel: 8
     },
     Madagascar: {
         potentialCustomers: 27,
         averageSalary: 100,
         digitalPayments: 20,
         competitionLevel: 1,
-        investmentLevel: 2
+        investmentLevel: 1
     },
     Brazil: {
         potentialCustomers: 212,
-        averageSalary: 600,
-        digitalPayments: 70,
-        competitionLevel: 5,
-        investmentLevel: 8
+        averageSalary: 800,
+        digitalPayments: 65,
+        competitionLevel: 4,
+        investmentLevel: 9
     },
     Peru: {
         potentialCustomers: 33,
-        averageSalary: 500,
-        digitalPayments: 50,
+        averageSalary: 900,
+        digitalPayments: 60,
         competitionLevel: 3,
         investmentLevel: 6
     },
     Argentina: {
         potentialCustomers: 45,
-        averageSalary: 700,
-        digitalPayments: 60,
+        averageSalary: 1000,
+        digitalPayments: 70,
         competitionLevel: 4,
-        investmentLevel: 6
+        investmentLevel: 8
     },
     Iceland: {
         potentialCustomers: 0.36,
         averageSalary: 5000,
         digitalPayments: 90,
         competitionLevel: 3,
-        investmentLevel: 5
+        investmentLevel: 3
     },
     Scandinavia: {
         potentialCustomers: 21, // Combined population of Norway, Sweden, and Denmark
         averageSalary: 4000,
         digitalPayments: 90,
         competitionLevel: 5,
-        investmentLevel: 6
+        investmentLevel: 8
     },
     "Northern Europe": {
         potentialCustomers: 128, 
         averageSalary: 3750,
-        digitalPayments: 85,
+        digitalPayments: 80,
         competitionLevel: 5,
-        investmentLevel: 7
+        investmentLevel: 9
     },
     "Southern Europe": {
         potentialCustomers: 140, 
         averageSalary: 1300,
         digitalPayments: 60,
-        competitionLevel: 4,
-        investmentLevel: 5
+        competitionLevel: 5,
+        investmentLevel: 8
     },
     "United Kingdom": {
         potentialCustomers: 67,
@@ -917,35 +917,35 @@ const countriesData = {
     Ukraine: {
         potentialCustomers: 44,
         averageSalary: 500,
-        digitalPayments: 40,
-        competitionLevel: 3,
-        investmentLevel: 3
+        digitalPayments: 60,
+        competitionLevel: 2,
+        investmentLevel: 7
     },
     Greenland: {
         potentialCustomers: 0.056,
         averageSalary: 3000,
         digitalPayments: 60,
         competitionLevel: 1,
-        investmentLevel: 5
+        investmentLevel: 3
     },
     Mexico: {
         potentialCustomers: 128,
         averageSalary: 700,
         digitalPayments: 60,
-        competitionLevel: 5,
-        investmentLevel: 3
+        competitionLevel: 4,
+        investmentLevel: 5
     },
     "Eastern USA": {
         potentialCustomers: 166,
         averageSalary: 4500,
-        digitalPayments: 85,
+        digitalPayments: 65,
         competitionLevel: 5,
         investmentLevel: 10
     },
     "Western USA": {
         potentialCustomers: 165,
         averageSalary: 4500,
-        digitalPayments: 85,
+        digitalPayments: 65,
         competitionLevel: 5,
         investmentLevel: 10
     },
@@ -961,21 +961,21 @@ const countriesData = {
         averageSalary: 4000,
         digitalPayments: 80,
         competitionLevel: 4,
-        investmentLevel: 6
+        investmentLevel: 5
     },
     Ontario: {
         potentialCustomers: 14.8, 
         averageSalary: 4000,
         digitalPayments: 80,
         competitionLevel: 5,
-        investmentLevel: 6
+        investmentLevel: 7
     },
     Quebec: {
         potentialCustomers: 8.5, 
         averageSalary: 3500,
         digitalPayments: 75,
         competitionLevel: 4,
-        investmentLevel: 5
+        investmentLevel: 6
     },
     "Northwest Territory": {
         potentialCustomers: 0.045, 
@@ -994,15 +994,15 @@ function calculateExpectedIncome(countryData) {
     const SAM = potentialCustomers * digitalPaymentsPenetration;
 
     // Step 2: Estimate Market Share based on competition level
-    const baseMarketShare = 0.15; // 15% Base Goal
-    const competitionAdjustment = (6 - countryData.competitionLevel) / 5;  // Adjust between 0.2 and 1
-    const marketShare = baseMarketShare * competitionAdjustment;
+    const baseMarketShare = 1; // 100% Base Goal
+    const competitionAdjustment = (6 - countryData.competitionLevel) / 20;  // Adjust between 5% and 25%
+    const marketShare = baseMarketShare * competitionAdjustment; // Real Market Share 5% in big markets, 25% small ones
 
     const estimatedUsers = SAM * marketShare;
 
     // Step 3: Determine Average Transaction Value (ATV) per User
     const annualSalary = countryData.averageSalary * 12; // Monthly to annual salary
-    const annualSpendPerUser = annualSalary * 0.2;       // 20% of annual salary
+    const annualSpendPerUser = annualSalary * 0.3;       // 30% of annual salary
 
     // Step 4: Calculate Total Transaction Value (TTV)
     const totalTransactionValue = estimatedUsers * annualSpendPerUser;
@@ -1019,12 +1019,12 @@ function calculateExpectedIncome(countryData) {
     // Determine the scale factor based on the investment level
     if (countryData.investmentLevel >= 1 && countryData.investmentLevel <= 3) {
         scaleFactor = 0.1;
-    } else if (countryData.investmentLevel >= 4 && countryData.investmentLevel <= 5) {
-        scaleFactor = 3;
-    } else if (countryData.investmentLevel >= 6 && countryData.investmentLevel <= 8) {
-        scaleFactor = 5;
+    } else if (countryData.investmentLevel >= 4 && countryData.investmentLevel <= 6) {
+        scaleFactor = 1;
+    } else if (countryData.investmentLevel >= 7 && countryData.investmentLevel <= 8) {
+        scaleFactor = 10;
     } else if (countryData.investmentLevel >= 9 && countryData.investmentLevel <= 10) {
-        scaleFactor = 8;
+        scaleFactor = 25;
     } else {
         // Handle unexpected investment levels
         scaleFactor = 1;
@@ -1071,7 +1071,7 @@ document.querySelectorAll('.area').forEach((country) => {
             document.getElementById('average-salary').innerText = `${countryData.averageSalary} USD`;
             document.getElementById('digital-payments').innerText = `${countryData.digitalPayments}%`;
             document.getElementById('competition-level').innerText = competitionLevels[countryData.competitionLevel] || "Unknown";
-            document.getElementById('investment-level').innerText = `${countryData.investmentLevel} MM $`;
+            document.getElementById('investment-level').innerText = countryData.investmentLevel;
 
             // Format expectedIncome to a readable number (e.g., in millions)
             const expectedIncomeInMillions = (expectedIncome / 1_000_000).toFixed(2);
