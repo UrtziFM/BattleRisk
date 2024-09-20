@@ -24,7 +24,7 @@ class Node {
 }
 
 class MCTS {
-    constructor(iterations = 1000, stage) {
+    constructor(iterations = 10000, stage) {
         this.iterations = iterations;
         this.stage = stage; // 'Fortify' or 'Battle'
         this.minScore = null;
@@ -41,12 +41,14 @@ class MCTS {
     bestUCT(node) {
         let bestNode = null;
         let maxUCT = -Infinity;
+        const explorationParameter = 2; // Default is sqrt(2)
+
         node.children.forEach(child => {
             let uctValue;
             if (child.visits === 0) {
                 uctValue = Infinity; // Ensure unvisited nodes are explored
             } else {
-                uctValue = (child.totalScore / child.visits) + Math.sqrt(2 * Math.log(node.visits) / child.visits);
+                uctValue = (child.totalScore / child.visits) + explorationParameter * Math.sqrt(Math.log(node.visits) / child.visits);
             }
             if (uctValue > maxUCT) {
                 bestNode = child;
@@ -66,43 +68,75 @@ class MCTS {
 
     simulateRandomPlayout(node) {
         let tempState = JSON.parse(JSON.stringify(node.state));
-
-        let playoutStage = this.stage; // Start from the current stage
+    
+        let playoutStage = this.stage;
         let currentPlayerIndex = tempState.players.findIndex(p => p.name === tempState.currentPlayer.name);
-
-        // Simulate until a terminal state is reached or until a maximum depth
-        const maxDepth = 10; // Limit the depth to prevent infinite loops
+    
+        const maxDepth = 10;
         let depth = 0;
-
+    
         while (!this.isTerminal(tempState) && depth < maxDepth) {
             depth++;
-
+    
+            const currentPlayer = tempState.players[currentPlayerIndex];
+            tempState.currentPlayer = currentPlayer;
+    
             if (playoutStage === 'Fortify') {
-                // Move to Battle stage after Fortify
+                // Bias fortification towards high marketTier countries
+                const ownedCountries = tempState.countries.filter(c => c.owner === currentPlayer.name);
+                const highTierCountries = ownedCountries.filter(c => {
+                    const countryData = countriesData[c.name];
+                    return countryData && countryData.marketTier <= 2; // Tiers 1 and 2
+                });
+    
+                const targetCountry = highTierCountries.length > 0 ? highTierCountries[0] : ownedCountries[0];
+    
+                if (currentPlayer.reserve > 0 && targetCountry) {
+                    targetCountry.army += currentPlayer.reserve;
+                    currentPlayer.reserve = 0;
+                }
                 playoutStage = 'Battle';
             } else if (playoutStage === 'Battle') {
-                // Simulate Battle stage for current player
-                const possibleMoves = this.getPossibleMoves(tempState, playoutStage);
-                if (possibleMoves.length > 0) {
-                    const randomMove = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
-                    tempState = randomMove.state;
+                // Bias attacks towards high marketTier countries
+                let attackMade = false;
+                const ownedCountries = tempState.countries.filter(c => c.owner === currentPlayer.name && c.army > 1);
+    
+                for (let country of ownedCountries) {
+                    const enemyNeighbors = country.neighbours
+                        .map(name => tempState.countries.find(c => c.name === name))
+                        .filter(c => c && c.owner !== currentPlayer.name);
+    
+                    // Prioritize high marketTier enemies
+                    enemyNeighbors.sort((a, b) => {
+                        const aTier = countriesData[a.name]?.marketTier || 4;
+                        const bTier = countriesData[b.name]?.marketTier || 4;
+                        return aTier - bTier;
+                    });
+    
+                    if (enemyNeighbors.length > 0) {
+                        const targetCountry = enemyNeighbors[0];
+                        const { newState } = this.simulateAttack(tempState, country, targetCountry);
+                        tempState = newState;
+                        attackMade = true;
+                        break;
+                    }
                 }
-                // Move to next player's turn
-                currentPlayerIndex = (currentPlayerIndex + 1) % tempState.players.length;
-                tempState.currentPlayer = tempState.players[currentPlayerIndex];
-                playoutStage = 'Fortify';
+    
+                if (!attackMade) {
+                    // No attack possible; move to next player
+                    currentPlayerIndex = (currentPlayerIndex + 1) % tempState.players.length;
+                    playoutStage = 'Fortify';
+                }
             } else {
-                // Simulate other players' turns with random moves
-                // For simplicity, we can skip detailed simulation and just proceed
+                // Next player's turn
                 currentPlayerIndex = (currentPlayerIndex + 1) % tempState.players.length;
-                tempState.currentPlayer = tempState.players[currentPlayerIndex];
                 playoutStage = 'Fortify';
             }
         }
-
+    
         const score = this.calculateScore(tempState);
         return score;
-    }
+    }    
 
     backPropagation(node, score) {
         while (node !== null) {
@@ -194,124 +228,115 @@ class MCTS {
         if (!state || !state.countries || !state.currentPlayer || state.currentPlayer.reserve <= 0) {
             return possibleMoves;
         }
-
+    
         const ownedCountries = state.countries.filter(country => country.owner === state.currentPlayer.name);
-
-        // Rank countries by vulnerability and opportunity
+    
+        // Rank countries by marketTier
         const rankedCountries = ownedCountries.map(country => {
-            const enemyNeighbors = country.neighbours.filter(neighbourName => {
-                const neighbour = state.countries.find(c => c.name === neighbourName);
-                return neighbour && neighbour.owner !== state.currentPlayer.name;
-            });
-
-            const opportunity = enemyNeighbors.reduce((sum, neighbourName) => {
-                const neighbour = state.countries.find(c => c.name === neighbourName);
-                return sum + (neighbour ? neighbour.army : 0);
-            }, 0);
-
-            // Higher vulnerability and higher opportunity increase the score
-            const score = enemyNeighbors.length * 2 + opportunity;
-
+            const countryData = countriesData[country.name];
+            const marketTier = countryData ? countryData.marketTier : 4; // Default to lowest tier if not found
             return {
                 country: country,
-                vulnerability: enemyNeighbors.length,
-                opportunity: opportunity,
-                score: score
+                marketTier: marketTier
             };
         });
-
-        // Sort countries based on the combined score
-        rankedCountries.sort((a, b) => b.score - a.score);
-
-        const totalScore = rankedCountries.reduce((sum, item) => sum + item.score, 0);
-
-        // Generate initial allocation proportional to the scores
-        const initialAllocation = rankedCountries.map(item => {
-            const proportion = item.score / totalScore;
-            const troops = Math.floor(proportion * state.currentPlayer.reserve);
-            return {
-                country: item.country.name,
-                troops: troops
-            };
-        });
-
-        // Adjust allocations to ensure total troops allocated equals reserve
-        let allocatedTroops = initialAllocation.reduce((sum, alloc) => sum + alloc.troops, 0);
-        let remainingTroops = state.currentPlayer.reserve - allocatedTroops;
-
-        // Distribute remaining troops one by one to the countries with highest score
-        for (let i = 0; remainingTroops > 0; i = (i + 1) % initialAllocation.length) {
-            initialAllocation[i].troops += 1;
-            remainingTroops -= 1;
+    
+        // Sort countries: lower marketTier (better markets) first
+        rankedCountries.sort((a, b) => a.marketTier - b.marketTier);
+    
+        // Generate initial allocation focusing on high marketTier countries
+        const initialAllocation = rankedCountries.map(item => ({
+            country: item.country.name,
+            troops: 0
+        }));
+    
+        let remainingReserve = state.currentPlayer.reserve;
+    
+        // Allocate troops starting with highest priority countries
+        for (let alloc of initialAllocation) {
+            if (remainingReserve <= 0) break;
+            alloc.troops += 1;
+            remainingReserve -= 1;
         }
-
-        // Generate variations of the allocation by swapping troops between countries
-        const allocations = this.generateAllocationVariations(initialAllocation, 1000); // Generate 1000 variations
-
-        allocations.forEach(allocation => {
+    
+        // Generate multiple allocation variations
+        const allocationVariations = this.generateAllocationVariations(initialAllocation, 1000); // Adjust number as needed
+    
+        allocationVariations.forEach(allocation => {
+            // Create a new state with the allocation
             const newState = JSON.parse(JSON.stringify(state));
-            const newPlayer = newState.currentPlayer;
-
-            // Apply allocation to newState
             allocation.forEach(alloc => {
-                const countryName = alloc.country;
-                const troops = alloc.troops;
-                const newCountry = newState.countries.find(c => c.name === countryName);
-                newCountry.army += troops;
+                const country = newState.countries.find(c => c.name === alloc.country);
+                if (country) {
+                    country.army += alloc.troops;
+                }
             });
-            newPlayer.reserve = 0; // All troops allocated
-
+            newState.currentPlayer.reserve = 0; // All troops allocated
+    
             const move = {
                 type: 'fortify',
                 allocations: allocation
             };
-
+    
             possibleMoves.push({ state: newState, move: move });
         });
-
+    
         return possibleMoves;
-    }
+    }      
 
     // Helper function to generate allocation variations
     generateAllocationVariations(initialAllocation, numVariations) {
-        const allocations = [initialAllocation];
-        for (let i = 0; i < numVariations - 1; i++) {
+        const allocations = [];
+    
+        for (let i = 0; i < numVariations; i++) {
             const newAllocation = JSON.parse(JSON.stringify(initialAllocation));
-            // Randomly choose two countries to swap troops
-            const idx1 = Math.floor(Math.random() * newAllocation.length);
-            let idx2 = Math.floor(Math.random() * newAllocation.length);
-            while (idx2 === idx1) {
-                idx2 = Math.floor(Math.random() * newAllocation.length);
+    
+            // Randomly redistribute troops among countries
+            let remainingTroops = newAllocation.reduce((sum, alloc) => sum + alloc.troops, 0);
+    
+            // Reset troops to zero
+            newAllocation.forEach(alloc => alloc.troops = 0);
+    
+            // Randomly assign troops
+            while (remainingTroops > 0) {
+                const idx = Math.floor(Math.random() * newAllocation.length);
+                newAllocation[idx].troops += 1;
+                remainingTroops -= 1;
             }
-
-            if (newAllocation[idx1].troops > 0) {
-                newAllocation[idx1].troops -= 1;
-                newAllocation[idx2].troops += 1;
-                allocations.push(newAllocation);
-            }
+    
+            allocations.push(newAllocation);
         }
+    
         return allocations;
-    }
+    }    
 
     getBattleMoves(state) {
         const possibleMoves = [];
-
+    
         if (!state || !state.countries || !state.currentPlayer) return possibleMoves;
-
+    
         state.countries.forEach(country => {
             if (country.owner === state.currentPlayer.name && country.army > 1) {
                 country.neighbours.forEach(neighbourName => {
                     const neighbour = state.countries.find(c => c.name === neighbourName);
                     if (neighbour && neighbour.owner !== state.currentPlayer.name) {
+                        const countryData = countriesData[neighbour.name];
+                        const marketTier = countryData ? countryData.marketTier : 4;
+                        const desirability = 5 - marketTier; // Higher desirability for better markets
+    
                         const { newState, move } = this.simulateAttack(state, country, neighbour);
+                        move.desirability = desirability;
                         possibleMoves.push({ state: newState, move: move });
                     }
                 });
             }
         });
-
-        return possibleMoves;
-    }
+    
+        // Sort moves by desirability
+        possibleMoves.sort((a, b) => b.move.desirability - a.move.desirability);
+    
+        return possibleMoves.slice(0, 10); // Limit to top 10 moves
+    }    
 
     simulateAttack(state, fromCountry, toCountry) {
         const newState = JSON.parse(JSON.stringify(state)); // Clone the state
@@ -368,22 +393,35 @@ class MCTS {
         if (!state || !state.players) return 0;
         const currentPlayer = state.players.find(p => p.name === state.currentPlayer.name);
         if (!currentPlayer) return 0;
-
+    
         let score = 0;
-
+    
         // Higher score for more territories and army strength
         const totalArmy = currentPlayer.areas.reduce((sum, areaName) => {
             const country = state.countries.find(c => c.name === areaName);
             return sum + (country ? country.army : 0);
         }, 0);
-
+    
         score += currentPlayer.areas.length * 10; // Each territory is worth 10 points
         score += totalArmy * 2; // Each army unit is worth 2 points
-
+    
+        // **Incorporate marketTier into the score**
+        const marketTierScore = currentPlayer.areas.reduce((sum, areaName) => {
+            const countryData = countriesData[areaName];
+            if (countryData && countryData.marketTier) {
+                // Higher tier (lower number) means better market; invert the tier for scoring
+                const invertedTier = 5 - countryData.marketTier; // 1 becomes 4, 4 becomes 1
+                return sum + invertedTier * 20; // Assign weight to marketTier
+            }
+            return sum;
+        }, 0);
+    
+        score += marketTierScore;
+    
         // Bonus for controlling continents
         const controlledContinents = this.getControlledContinents(currentPlayer, state);
         score += controlledContinents.length * 50;
-
+    
         // Penalty for enemy neighbors
         const enemyBorders = currentPlayer.areas.reduce((sum, areaName) => {
             const country = state.countries.find(c => c.name === areaName);
@@ -394,16 +432,16 @@ class MCTS {
             });
             return sum + enemyNeighbors.length;
         }, 0);
-
+    
         score -= enemyBorders * 5; // Each enemy border reduces the score
-
+    
         // Ensure score is a valid number
         if (isNaN(score)) {
             score = 0;
         }
-
+    
         return score;
-    }
+    }    
 
     getControlledContinents(player, state) {
         const controlledContinents = [];
