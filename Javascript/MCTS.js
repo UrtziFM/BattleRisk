@@ -246,7 +246,7 @@ class MCTS {
         }
 
         // Generate variations of the allocation by swapping troops between countries
-        const allocations = this.generateAllocationVariations(initialAllocation, 10); // Generate 10 variations
+        const allocations = this.generateAllocationVariations(initialAllocation, 1000); // Generate 1000 variations
 
         allocations.forEach(allocation => {
             const newState = JSON.parse(JSON.stringify(state));
