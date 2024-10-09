@@ -385,3 +385,75 @@ body {
     display: none; /* Oculto por defecto */
     z-index: 1000;
 }
+
+/* Style for the floating buttons container */
+.floating-buttons {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 100; 
+}
+
+.floating-buttons {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 100;
+}
+
+.fab-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.game-fab {
+  width: 56px;
+  height: 56px;
+  background-color: #ffcc00;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-fab:hover {
+  background-color: #7f6500;
+}
+
+.game-fab img.fab-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.fab-tooltip {
+  visibility: hidden;
+  width: 100px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 6px 8px;
+  border-radius: 4px;
+  position: absolute;
+  right: 70px;
+  bottom: 50%;
+  transform: translateY(50%);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.fab-container:hover .fab-tooltip,
+.fab-container:focus-within .fab-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
